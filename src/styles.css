@@ -1,1 +1,143 @@
 /* You can add global styles to this file, and also import other style files */
+
+.content-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.content-toolbar__copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.content-toolbar__eyebrow {
+  margin: 0;
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.22rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid #d6d3d1;
+  background: #f3f0eb;
+  color: #57534e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.content-toolbar__eyebrow::after {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-left: 0.45rem;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgb(22 163 74 / 20%);
+  align-self: center;
+}
+
+.content-toolbar__search-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  width: min(100%, 36rem);
+  margin-left: auto;
+}
+
+.content-toolbar__search-input-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  min-height: 2.85rem;
+  padding: 0.25rem 0.8rem;
+  flex: 1;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.content-toolbar__search-input-wrap:focus-within {
+  border-color: #a8a29e;
+  box-shadow: 0 8px 18px rgb(28 25 23 / 10%);
+}
+
+.content-toolbar__search-icon {
+  color: var(--text-muted);
+  position: relative;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 1.2rem;
+}
+
+.content-toolbar__search-icon::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.78rem;
+  height: 0.78rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.content-toolbar__search-icon::after {
+  content: '';
+  position: absolute;
+  right: 0.05rem;
+  bottom: 0.08rem;
+  width: 0.5rem;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: rotate(45deg);
+  transform-origin: right center;
+}
+
+.content-toolbar__search-input {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  width: 100%;
+  min-height: 2.2rem;
+  padding: 0;
+}
+
+.content-toolbar__search-input:focus {
+  outline: none;
+}
+
+.content-toolbar__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 960px) {
+  .content-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .content-toolbar__search-row {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .content-toolbar__search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

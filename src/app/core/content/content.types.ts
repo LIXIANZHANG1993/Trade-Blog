@@ -24,7 +24,15 @@ export interface KnowledgePost extends BasePost {
   readonly references: readonly string[];
 }
 
-export interface ContentManifestItem {
-  readonly kind: ContentKind;
+export interface ReviewManifestItem {
+  readonly kind: 'review';
+  readonly path: string;
+  readonly imagePath: string;
+}
+
+export interface KnowledgeManifestItem {
+  readonly kind: 'knowledge';
   readonly path: string;
 }
+
+export type ContentManifestItem = ReviewManifestItem | KnowledgeManifestItem;

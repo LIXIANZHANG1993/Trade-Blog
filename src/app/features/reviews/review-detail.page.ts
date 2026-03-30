@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { ContentRepository } from '../../core/content/content.repository';
@@ -94,8 +95,12 @@ export class ReviewDetailPage {
     this.updateFloatingBackVisibility();
   };
 
+  private readonly routeParamMap = toSignal(this.route.paramMap, {
+    initialValue: this.route.snapshot.paramMap
+  });
+
   protected readonly post = computed(() => {
-    const slug = this.route.snapshot.paramMap.get('slug');
+    const slug = this.routeParamMap().get('slug');
     return slug ? this.repository.findReviewBySlug(slug) : undefined;
   });
 

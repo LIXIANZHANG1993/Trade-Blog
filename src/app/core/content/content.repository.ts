@@ -1,9 +1,10 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { CONTENT_MANIFEST } from './content.manifest';
 import {
-  ContentManifestItem,
   KnowledgeDifficulty,
+  KnowledgeManifestItem,
   KnowledgePost,
+  ReviewManifestItem,
   ReviewPost
 } from './content.types';
 import { getRequiredString, parseFrontmatter, parseList } from './frontmatter-parser';
@@ -80,20 +81,20 @@ export class ContentRepository {
   }
 
   private async loadReviews(): Promise<readonly ReviewPost[]> {
-    const reviewEntries = CONTENT_MANIFEST.filter((item) => item.kind === 'review');
+    const reviewEntries = CONTENT_MANIFEST.filter((item): item is ReviewManifestItem => item.kind === 'review');
     const posts = await Promise.all(reviewEntries.map((entry) => this.loadReview(entry)));
 
     return posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   }
 
   private async loadKnowledge(): Promise<readonly KnowledgePost[]> {
-    const knowledgeEntries = CONTENT_MANIFEST.filter((item) => item.kind === 'knowledge');
+    const knowledgeEntries = CONTENT_MANIFEST.filter((item): item is KnowledgeManifestItem => item.kind === 'knowledge');
     const posts = await Promise.all(knowledgeEntries.map((entry) => this.loadKnowledgePost(entry)));
 
     return posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   }
 
-  private async loadReview(entry: ContentManifestItem): Promise<ReviewPost> {
+  private async loadReview(entry: ReviewManifestItem): Promise<ReviewPost> {
     const response = await fetch(entry.path);
 
     if (!response.ok) {
@@ -102,7 +103,7 @@ export class ContentRepository {
 
     const markdown = await response.text();
     const normalizedMarkdown = markdown.replace(/\r\n/g, '\n').trim();
-    const imagePath = await this.resolveImagePath(entry.path);
+    const imagePath = entry.imagePath;
 
     if (normalizedMarkdown.startsWith('---\n')) {
       const parsed = parseFrontmatter(markdown);
@@ -135,7 +136,7 @@ export class ContentRepository {
     };
   }
 
-  private async loadKnowledgePost(entry: ContentManifestItem): Promise<KnowledgePost> {
+  private async loadKnowledgePost(entry: KnowledgeManifestItem): Promise<KnowledgePost> {
     const response = await fetch(entry.path);
 
     if (!response.ok) {
@@ -215,21 +216,6 @@ export class ContentRepository {
     return token || 'UNKNOWN';
   }
 
-  private async resolveImagePath(markdownPath: string): Promise<string> {
-    const basePath = markdownPath.replace(/\.md$/i, '');
-    const extensions = ['.png', '.jpg', '.jpeg', '.webp', '.avif'] as const;
-
-    for (const extension of extensions) {
-      const candidate = `${basePath}${extension}`;
-      const response = await fetch(candidate);
-
-      if (response.ok) {
-        return candidate;
-      }
-    }
-
-    throw new Error(`找不到對應圖片檔案: ${basePath}.{png|jpg|jpeg|webp|avif}`);
-  }
 }
 
 function isKnowledgeDifficulty(value: string): value is KnowledgeDifficulty {

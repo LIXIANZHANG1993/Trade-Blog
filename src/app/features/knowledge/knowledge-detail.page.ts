@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContentRepository } from '../../core/content/content.repository';
 
@@ -46,8 +47,12 @@ export class KnowledgeDetailPage {
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(ContentRepository);
 
+  private readonly routeParamMap = toSignal(this.route.paramMap, {
+    initialValue: this.route.snapshot.paramMap
+  });
+
   protected readonly post = computed(() => {
-    const slug = this.route.snapshot.paramMap.get('slug');
+    const slug = this.routeParamMap().get('slug');
     return slug ? this.repository.findKnowledgeBySlug(slug) : undefined;
   });
 }

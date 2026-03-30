@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContentRepository } from '../../core/content/content.repository';
 
@@ -49,7 +50,11 @@ export class TagPage {
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(ContentRepository);
 
-  protected readonly tag = computed(() => this.route.snapshot.paramMap.get('tag') ?? '');
+  private readonly routeParamMap = toSignal(this.route.paramMap, {
+    initialValue: this.route.snapshot.paramMap
+  });
+
+  protected readonly tag = computed(() => this.routeParamMap().get('tag') ?? '');
 
   protected readonly taggedReviews = computed(() => {
     const selectedTag = this.tag();

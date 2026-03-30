@@ -6,6 +6,7 @@ const publicContentDir = path.join(projectRoot, 'public', 'content');
 const reviewsDir = path.join(publicContentDir, 'reviews');
 const knowledgeDir = path.join(publicContentDir, 'knowledge');
 const manifestPath = path.join(projectRoot, 'src', 'app', 'core', 'content', 'content.manifest.ts');
+const reviewImageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.avif'];
 
 const toWebPath = (absolutePath) => {
   const relative = path.relative(path.join(projectRoot, 'public'), absolutePath);
@@ -14,12 +15,14 @@ const toWebPath = (absolutePath) => {
 
 const isMarkdownFile = (fileName) => fileName.toLowerCase().endsWith('.md');
 
+const isFileMissingError = (error) => error instanceof Error && 'code' in error && error.code === 'ENOENT';
+
 const readMarkdownFiles = async (directoryPath) => {
   try {
     const entries = await fs.readdir(directoryPath, { withFileTypes: true });
     return entries.filter((entry) => entry.isFile() && isMarkdownFile(entry.name)).map((entry) => path.join(directoryPath, entry.name));
   } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+    if (isFileMissingError(error)) {
       return [];
     }
     throw error;
@@ -42,11 +45,38 @@ const readReviewMarkdownFiles = async () => {
 
     return filesByDateDir.flat().sort((a, b) => a.localeCompare(b));
   } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+    if (isFileMissingError(error)) {
       return [];
     }
     throw error;
   }
+};
+
+const fileExists = async (absolutePath) => {
+  try {
+    await fs.access(absolutePath);
+    return true;
+  } catch (error) {
+    if (isFileMissingError(error)) {
+      return false;
+    }
+    throw error;
+  }
+};
+
+const resolveReviewImagePath = async (markdownPath) => {
+  const basePath = markdownPath.replace(/\.md$/i, '');
+
+  for (const extension of reviewImageExtensions) {
+    const candidate = `${basePath}${extension}`;
+    if (await fileExists(candidate)) {
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    `找不到對應圖片檔案: ${toWebPath(basePath)}.{${reviewImageExtensions.map((extension) => extension.slice(1)).join('|')}}`
+  );
 };
 
 const writeManifest = async () => {
@@ -55,9 +85,14 @@ const writeManifest = async () => {
     readMarkdownFiles(knowledgeDir)
   ]);
 
-  const reviewEntries = reviewMarkdownFiles
-    .map((filePath) => `  { kind: 'review', path: '${toWebPath(filePath)}' },`)
-    .join('\n');
+  const reviewEntries = (
+    await Promise.all(
+      reviewMarkdownFiles.map(async (filePath) => {
+        const imagePath = await resolveReviewImagePath(filePath);
+        return `  { kind: 'review', path: '${toWebPath(filePath)}', imagePath: '${toWebPath(imagePath)}' },`;
+      })
+    )
+  ).join('\n');
 
   const knowledgeEntries = knowledgeMarkdownFiles
     .sort((a, b) => a.localeCompare(b))
