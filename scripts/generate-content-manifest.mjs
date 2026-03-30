@@ -10,7 +10,7 @@ const reviewImageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.avif'];
 
 const toWebPath = (absolutePath) => {
   const relative = path.relative(path.join(projectRoot, 'public'), absolutePath);
-  return `/${relative.split(path.sep).join('/')}`;
+  return relative.split(path.sep).join('/');
 };
 
 const isMarkdownFile = (fileName) => fileName.toLowerCase().endsWith('.md');
