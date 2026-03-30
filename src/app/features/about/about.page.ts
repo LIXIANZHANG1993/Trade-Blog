@@ -116,7 +116,11 @@ interface AboutSection {
 
     .about-sections {
       display: grid;
-      gap: 1.3rem;
+      gap: 1.45rem;
+    }
+
+    :host > .page-section + .page-section {
+      margin-top: 0.6rem;
     }
 
     .about-section {
