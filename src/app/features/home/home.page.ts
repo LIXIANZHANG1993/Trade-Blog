@@ -25,7 +25,7 @@ import { RouterLink } from '@angular/router';
 
       <figure class="home-landing-hero__media">
         <img
-          ngSrc="/images/trading-hero.svg"
+          ngSrc="images/trading-hero.svg"
           width="640"
           height="480"
           alt="顯示交易圖表、趨勢線與風險管理元素的示意圖"

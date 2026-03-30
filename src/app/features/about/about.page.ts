@@ -79,7 +79,7 @@ interface AboutSection {
 
       <figure class="about-cta__media">
         <img
-          ngSrc="/images/about/about-cta-system.svg"
+          ngSrc="images/about/about-cta-system.svg"
           width="1200"
           height="800"
           alt="交易系統儀表板示意圖，包含策略模組、風險監控與覆盤流程"
@@ -336,7 +336,7 @@ export class AboutPage {
       description:
         '我的核心方法是先定義規則，再執行交易。只交易符合策略情境的機會，避免依賴盤中情緒判斷。',
       bullets: ['明確定義趨勢與結構條件', '訊號未成立不進場', '只做可量化風險的交易'],
-      imageSrc: '/images/about/about-philosophy.svg',
+      imageSrc: 'images/about/about-philosophy.svg',
       imageAlt: '交易儀表板示意圖，包含趨勢線與策略框架',
       imageWidth: 1200,
       imageHeight: 800
@@ -347,7 +347,7 @@ export class AboutPage {
       description:
         '我將「先活下來」視為第一原則。每筆交易先定義停損與最大損失，再決定是否值得承擔風險。',
       bullets: ['固定單筆風險上限', '使用預設停損與部位大小', '連續虧損時降低曝險與交易頻率'],
-      imageSrc: '/images/about/about-risk-management.svg',
+      imageSrc: 'images/about/about-risk-management.svg',
       imageAlt: '風險管理儀表板示意圖，顯示停損界線與部位配置',
       imageWidth: 1200,
       imageHeight: 800
@@ -358,7 +358,7 @@ export class AboutPage {
       description:
         '策略是否有效，取決於執行是否一致。我使用交易前 checklist 與交易後檢核，維持樣本品質。',
       bullets: ['下單前檢查市場狀態與事件風險', '進出場完全依據計畫', '避免臨場追價與情緒加碼'],
-      imageSrc: '/images/about/about-execution-discipline.svg',
+      imageSrc: 'images/about/about-execution-discipline.svg',
       imageAlt: '交易執行流程示意圖，展示檢核清單與下單節奏',
       imageWidth: 1200,
       imageHeight: 800
@@ -369,7 +369,7 @@ export class AboutPage {
       description:
         '我把每次交易結果拆解為可改善項目，將錯誤模式回寫到交易手冊，形成持續優化的閉環。',
       bullets: ['每週固定進行交易覆盤', '追蹤高勝率情境與常見失誤', '將改進方案落地到下一週計畫'],
-      imageSrc: '/images/about/about-review-iteration.svg',
+      imageSrc: 'images/about/about-review-iteration.svg',
       imageAlt: '覆盤迭代看板示意圖，展示績效檢視與改進循環',
       imageWidth: 1200,
       imageHeight: 800
