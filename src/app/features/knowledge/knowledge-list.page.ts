@@ -9,7 +9,7 @@ import { KnowledgePost } from '../../core/content/content.types';
   imports: [FormsModule, RouterLink],
   template: `
     <section class="page-section">
-      <h1 class="page-title">交易知識</h1>
+      <h2 class="page-title">交易知識</h2>
       <p class="page-subtitle">整理風控、心態與流程化決策，建立穩定的交易系統。</p>
     </section>
 

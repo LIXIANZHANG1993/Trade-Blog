@@ -7,7 +7,7 @@ import { ContentRepository } from '../../core/content/content.repository';
   imports: [RouterLink],
   template: `
     <section class="page-section">
-      <h1 class="page-title">標籤：#{{ tag() }}</h1>
+      <h2 class="page-title">標籤：#{{ tag() }}</h2>
       <p class="page-subtitle">跨覆盤與知識文章的彙整。</p>
     </section>
 

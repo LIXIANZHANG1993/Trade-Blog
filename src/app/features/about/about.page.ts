@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-about-page',
   template: `
     <section class="page-section">
-      <h1 class="page-title">關於我</h1>
+      <h2 class="page-title">關於我</h2>
       <p class="page-subtitle">記錄交易過程、沉澱知識，讓每次虧損都轉成可執行的改進。</p>
     </section>
 

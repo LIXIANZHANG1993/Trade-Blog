@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   template: `
     <section class="card page-section">
-      <h1 class="page-title">找不到頁面</h1>
+      <h2 class="page-title">找不到頁面</h2>
       <p>你造訪的頁面不存在，可能是連結錯誤或文章已搬移。</p>
       <a class="btn-link" routerLink="/">回到首頁</a>
     </section>

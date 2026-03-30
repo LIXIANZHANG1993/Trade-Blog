@@ -9,7 +9,7 @@ import { ReviewPost, TradeOutcome } from '../../core/content/content.types';
   imports: [FormsModule, RouterLink],
   template: `
     <section class="page-section">
-      <h1 class="page-title">交易覆盤</h1>
+      <h2 class="page-title">交易覆盤</h2>
       <p class="page-subtitle">依照市場、標籤與結果快速回顧交易決策。</p>
     </section>
 

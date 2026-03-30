@@ -3,11 +3,14 @@
 
   <header class="site-header" aria-label="網站標頭">
     <div class="container site-header__inner">
-      <a routerLink="/" class="brand" [attr.aria-label]="title() + ' 首頁'">{{ title() }}</a>
+      <a routerLink="/" class="brand" [attr.aria-label]="title() + ' 首頁'">
+        <span class="brand__eyebrow">TRADING JOURNAL</span>
+        <span class="brand__name">{{ title() }}</span>
+      </a>
 
       <nav aria-label="主選單">
         <ul class="nav-list">
-          @for (link of navLinks; track link.path) {
+          @for (link of navLinks(); track link.path) {
             <li>
               <a
                 class="nav-link"
@@ -24,7 +27,24 @@
     </div>
   </header>
 
+  <section class="hero-banner" aria-label="網站核心價值">
+    <div class="container hero-banner__inner">
+      <p class="hero-banner__kicker">建立你的交易決策系統</p>
+      <h1 class="hero-banner__title">用紀律與流程，打造可持續優化的交易系統。</h1>
+      <p class="hero-banner__desc">
+        從進場邏輯、風險控管到出場紀律，將實戰紀錄沉澱為可執行的交易知識庫。
+      </p>
+    </div>
+  </section>
+
   <main id="main-content" class="container page-main" tabindex="-1">
     <router-outlet />
   </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p>© {{ currentYear }} Trade Blog</p>
+      <p class="site-footer__meta">Trading reviews, playbooks, and process notes.</p>
+    </div>
+  </footer>
 </div>
