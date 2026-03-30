@@ -14,14 +14,8 @@ export interface BasePost {
 }
 
 export interface ReviewPost extends BasePost {
+  readonly imagePath: string;
   readonly market: string;
-  readonly timeframe: string;
-  readonly setup: string;
-  readonly direction: TradeDirection;
-  readonly outcome: TradeOutcome;
-  readonly pnlR: number;
-  readonly mistakes: readonly string[];
-  readonly lessons: readonly string[];
 }
 
 export interface KnowledgePost extends BasePost {

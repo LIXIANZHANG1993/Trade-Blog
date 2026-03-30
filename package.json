@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "content:manifest": "node ./scripts/generate-content-manifest.mjs",
+    "start": "npm run content:manifest && ng serve",
+    "build": "npm run content:manifest && ng build",
+    "watch": "npm run content:manifest && ng build --watch --configuration development",
+    "test": "npm run content:manifest && ng test"
   },
   "private": true,
   "packageManager": "npm@11.12.0",

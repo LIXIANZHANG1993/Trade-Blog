@@ -4,9 +4,7 @@ import {
   ContentManifestItem,
   KnowledgeDifficulty,
   KnowledgePost,
-  ReviewPost,
-  TradeDirection,
-  TradeOutcome
+  ReviewPost
 } from './content.types';
 import { getRequiredString, parseFrontmatter, parseList } from './frontmatter-parser';
 
@@ -103,41 +101,37 @@ export class ContentRepository {
     }
 
     const markdown = await response.text();
-    const parsed = parseFrontmatter(markdown);
-    const fields = parsed.attributes;
+    const normalizedMarkdown = markdown.replace(/\r\n/g, '\n').trim();
+    const imagePath = await this.resolveImagePath(entry.path);
 
-    const directionCandidate = getRequiredString(fields, 'direction', entry.path);
-    const outcomeCandidate = getRequiredString(fields, 'outcome', entry.path);
+    if (normalizedMarkdown.startsWith('---\n')) {
+      const parsed = parseFrontmatter(markdown);
+      const fields = parsed.attributes;
 
-    if (!isTradeDirection(directionCandidate)) {
-      throw new Error(`檔案 ${entry.path} direction 不合法`);
+      return {
+        slug: getRequiredString(fields, 'slug', entry.path),
+        title: getRequiredString(fields, 'title', entry.path),
+        summary: getRequiredString(fields, 'summary', entry.path),
+        publishedAt: getRequiredString(fields, 'publishedAt', entry.path),
+        tags: parseList(getRequiredString(fields, 'tags', entry.path)),
+        imagePath,
+        market: getRequiredString(fields, 'market', entry.path),
+        content: parsed.body
+      };
     }
 
-    if (!isTradeOutcome(outcomeCandidate)) {
-      throw new Error(`檔案 ${entry.path} outcome 不合法`);
-    }
-
-    const pnlR = Number(getRequiredString(fields, 'pnlR', entry.path));
-
-    if (Number.isNaN(pnlR)) {
-      throw new Error(`檔案 ${entry.path} 的 pnlR 不是有效數字`);
-    }
+    const title = this.parseTitleFromMarkdown(normalizedMarkdown, entry.path);
+    const publishedAt = this.parsePublishedAtFromPath(entry.path);
 
     return {
-      slug: getRequiredString(fields, 'slug', entry.path),
-      title: getRequiredString(fields, 'title', entry.path),
-      summary: getRequiredString(fields, 'summary', entry.path),
-      publishedAt: getRequiredString(fields, 'publishedAt', entry.path),
-      tags: parseList(getRequiredString(fields, 'tags', entry.path)),
-      market: getRequiredString(fields, 'market', entry.path),
-      timeframe: getRequiredString(fields, 'timeframe', entry.path),
-      setup: getRequiredString(fields, 'setup', entry.path),
-      direction: directionCandidate,
-      outcome: outcomeCandidate,
-      pnlR,
-      mistakes: parseList(getRequiredString(fields, 'mistakes', entry.path)),
-      lessons: parseList(getRequiredString(fields, 'lessons', entry.path)),
-      content: parsed.body
+      slug: this.parseSlugFromPath(entry.path),
+      title,
+      summary: this.buildSummaryFromMarkdown(normalizedMarkdown, title),
+      publishedAt,
+      tags: [this.parseMarketFromTitle(title), '交易覆盤'],
+      imagePath,
+      market: this.parseMarketFromTitle(title),
+      content: normalizedMarkdown
     };
   }
 
@@ -174,14 +168,68 @@ export class ContentRepository {
   private collectTags(posts: readonly { readonly tags: readonly string[] }[]): readonly string[] {
     return [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.localeCompare(b));
   }
-}
 
-function isTradeDirection(value: string): value is TradeDirection {
-  return value === 'long' || value === 'short';
-}
+  private parseSlugFromPath(path: string): string {
+    const fileName = path.split('/').at(-1);
 
-function isTradeOutcome(value: string): value is TradeOutcome {
-  return value === 'win' || value === 'loss' || value === 'breakeven';
+    if (!fileName) {
+      throw new Error(`無法從路徑取得檔名: ${path}`);
+    }
+
+    return fileName.replace(/\.md$/i, '');
+  }
+
+  private parsePublishedAtFromPath(path: string): string {
+    const dateDir = path.split('/').at(-2) ?? '';
+    const match = dateDir.match(/^(\d{4})(\d{2})(\d{2})$/);
+
+    if (!match) {
+      return dateDir;
+    }
+
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+
+  private parseTitleFromMarkdown(markdown: string, path: string): string {
+    const firstLine = markdown.split('\n').find((line) => line.trim().length > 0)?.trim();
+
+    if (!firstLine || !firstLine.startsWith('# ')) {
+      throw new Error(`檔案 ${path} 缺少標題 (第一行需為 # 標題)`);
+    }
+
+    return firstLine.slice(2).trim();
+  }
+
+  private buildSummaryFromMarkdown(markdown: string, title: string): string {
+    const lines = markdown
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0 && !line.startsWith('#') && !line.startsWith('-') && !line.startsWith('>'));
+
+    const candidate = lines[0] ?? title;
+    return candidate.length > 90 ? `${candidate.slice(0, 90)}…` : candidate;
+  }
+
+  private parseMarketFromTitle(title: string): string {
+    const token = title.split(/\s+/)[0]?.trim().toUpperCase();
+    return token || 'UNKNOWN';
+  }
+
+  private async resolveImagePath(markdownPath: string): Promise<string> {
+    const basePath = markdownPath.replace(/\.md$/i, '');
+    const extensions = ['.png', '.jpg', '.jpeg', '.webp', '.avif'] as const;
+
+    for (const extension of extensions) {
+      const candidate = `${basePath}${extension}`;
+      const response = await fetch(candidate);
+
+      if (response.ok) {
+        return candidate;
+      }
+    }
+
+    throw new Error(`找不到對應圖片檔案: ${basePath}.{png|jpg|jpeg|webp|avif}`);
+  }
 }
 
 function isKnowledgeDifficulty(value: string): value is KnowledgeDifficulty {

@@ -1,71 +1,83 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ContentRepository } from '../../core/content/content.repository';
-import { ReviewPost, TradeOutcome } from '../../core/content/content.types';
+import { ReviewPost } from '../../core/content/content.types';
 
 @Component({
   selector: 'app-review-list-page',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, NgOptimizedImage],
+  host: {
+    class: 'review-list-page'
+  },
   template: `
-    <section class="page-section">
-      <h2 class="page-title">交易覆盤</h2>
-      <p class="page-subtitle">依照市場、標籤與結果快速回顧交易決策。</p>
-    </section>
+    <section class="page-section reviews-toolbar">
+      <div class="reviews-toolbar__copy">
+        <p class="reviews-toolbar__eyebrow">Trade Journal</p>
+        <h2 class="page-title">交易覆盤</h2>
+        <p class="page-subtitle">依照市場、標籤與結果快速回顧交易決策。</p>
+      </div>
 
-    <section class="card page-section" aria-label="篩選條件">
-      <div class="controls">
-        <label>
-          <span class="meta">關鍵字</span><br />
+      <form class="reviews-toolbar__search-row" role="search" aria-label="搜尋覆盤文章">
+        <label class="reviews-toolbar__search-input-wrap" for="reviews-search-input">
+          <span class="reviews-toolbar__search-icon" aria-hidden="true"></span>
+          <span class="reviews-toolbar__sr-only">搜尋關鍵字</span>
           <input
-            class="input"
+            id="reviews-search-input"
+            class="reviews-toolbar__search-input"
             type="search"
             [ngModel]="query()"
             (ngModelChange)="query.set($event)"
+            name="query"
             placeholder="搜尋標題、策略、市場"
           />
         </label>
 
-        <label>
-          <span class="meta">結果</span><br />
-          <select
-            class="select"
-            [ngModel]="outcomeFilter()"
-            (ngModelChange)="onOutcomeChange($event)"
-          >
-            <option value="all">全部</option>
-            <option value="win">Win</option>
-            <option value="loss">Loss</option>
-            <option value="breakeven">Breakeven</option>
-          </select>
-        </label>
+      </form>
+    </section>
+
+    <section class="page-section">
+      <div class="reviews-result-meta">
+        <p class="meta">共 {{ filteredPosts().length }} 筆覆盤</p>
       </div>
     </section>
 
     <section class="page-section">
-      <p class="meta">共 {{ filteredPosts().length }} 筆覆盤</p>
-
-      <div class="grid grid-2">
+        <div class="reviews-grid">
         @for (post of filteredPosts(); track post.slug) {
-          <article class="card">
-            <h2>{{ post.title }}</h2>
-            <p class="meta">{{ post.publishedAt }} · {{ post.market }} · {{ post.timeframe }}</p>
-            <p>{{ post.summary }}</p>
-            <p class="meta">策略：{{ post.setup }} · {{ post.direction }} · PnL(R): {{ post.pnlR }}</p>
-            <p>
-              <span class="status-pill" [class]="'status-pill ' + post.outcome">{{ post.outcome }}</span>
-            </p>
+          <article class="review-card">
+            <a class="review-card__image-link" [routerLink]="['/reviews', post.slug]" [attr.aria-label]="post.title">
+              <img
+                class="review-card__image"
+                [ngSrc]="post.imagePath"
+                [alt]="post.title + ' 當日走勢圖'"
+                width="1200"
+                height="675"
+              />
+            </a>
 
-            <ul class="tag-list">
+            <header class="review-card__header">
+              <h3 class="review-card__title">
+                <a class="review-card__title-link" [routerLink]="['/reviews', post.slug]">{{ post.title }}</a>
+              </h3>
+            </header>
+
+            <p class="review-card__meta">{{ post.publishedAt }} · {{ post.market }}</p>
+            <p class="review-card__summary">{{ post.summary }}</p>
+
+            <ul class="review-card__tag-list">
               @for (tag of post.tags; track tag) {
-                <li><a class="tag-chip" [routerLink]="['/tags', tag]">#{{ tag }}</a></li>
+                <li><a class="review-card__tag" [routerLink]="['/tags', tag]">#{{ tag }}</a></li>
               }
             </ul>
 
-            <p><a class="btn-link" [routerLink]="['/reviews', post.slug]">查看詳情</a></p>
+            <p class="review-card__action">
+              <a class="review-card__link" [routerLink]="['/reviews', post.slug]">查看詳情</a>
+            </p>
           </article>
         } @empty {
-          <article class="card">
+          <article class="review-card review-card--empty">
             <h2>找不到符合條件的覆盤</h2>
             <p>請調整關鍵字或篩選條件。</p>
           </article>
@@ -73,39 +85,37 @@ import { ReviewPost, TradeOutcome } from '../../core/content/content.types';
       </div>
     </section>
   `,
+  styleUrl: './review-list.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReviewListPage {
   private readonly repository = inject(ContentRepository);
 
   protected readonly query = signal('');
-  protected readonly outcomeFilter = signal<'all' | TradeOutcome>('all');
   protected readonly posts = this.repository.reviewPosts;
 
   protected readonly filteredPosts = computed(() => {
     const normalizedQuery = this.query().trim().toLowerCase();
-    const outcome = this.outcomeFilter();
-
-    return this.posts().filter((post) => this.matchesFilter(post, normalizedQuery, outcome));
+    return this.posts().filter((post) => this.matchesQuery(post, normalizedQuery));
   });
 
-  protected onOutcomeChange(value: string): void {
-    if (value === 'all' || value === 'win' || value === 'loss' || value === 'breakeven') {
-      this.outcomeFilter.set(value);
+  private matchesQuery(post: ReviewPost, query: string): boolean {
+    if (query.length === 0) {
+      return true;
     }
-  }
 
-  private matchesFilter(post: ReviewPost, query: string, outcome: 'all' | TradeOutcome): boolean {
-    const queryMatched =
-      query.length === 0 ||
+    const normalizedDateQuery = query.replace(/[^\d]/g, '');
+    const normalizedDate = post.publishedAt.replace(/[^\d]/g, '');
+
+    return (
       post.title.toLowerCase().includes(query) ||
       post.summary.toLowerCase().includes(query) ||
       post.market.toLowerCase().includes(query) ||
-      post.setup.toLowerCase().includes(query) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(query));
-
-    const outcomeMatched = outcome === 'all' || post.outcome === outcome;
-
-    return queryMatched && outcomeMatched;
+      post.publishedAt.toLowerCase().includes(query) ||
+      post.slug.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query) ||
+      post.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+      (normalizedDateQuery.length > 0 && normalizedDate.includes(normalizedDateQuery))
+    );
   }
 }
