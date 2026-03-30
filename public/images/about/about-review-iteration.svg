@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Review Iteration Illustration</title>
+  <desc id="desc">Performance review board with feedback loop from execution to optimization.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827" />
+      <stop offset="1" stop-color="#1f2937" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <rect x="74" y="64" width="1052" height="672" rx="24" fill="#0f172a" stroke="#334155" />
+
+  <text x="116" y="124" fill="#e2e8f0" font-size="28" font-family="Inter, Segoe UI, sans-serif" font-weight="700">REVIEW & IMPROVEMENT LOOP</text>
+
+  <g>
+    <rect x="118" y="176" width="314" height="238" rx="16" fill="#111827" stroke="#374151" />
+    <text x="148" y="216" fill="#f8fafc" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Performance Snapshot</text>
+    <text x="148" y="258" fill="#94a3b8" font-size="17" font-family="Inter, Segoe UI, sans-serif">Win Rate</text>
+    <text x="268" y="258" fill="#22c55e" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">58%</text>
+    <text x="148" y="300" fill="#94a3b8" font-size="17" font-family="Inter, Segoe UI, sans-serif">Avg R Multiple</text>
+    <text x="268" y="300" fill="#38bdf8" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">1.34R</text>
+    <text x="148" y="342" fill="#94a3b8" font-size="17" font-family="Inter, Segoe UI, sans-serif">Max DD</text>
+    <text x="268" y="342" fill="#f59e0b" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">-4.2R</text>
+  </g>
+
+  <g>
+    <rect x="452" y="176" width="640" height="238" rx="16" fill="#111827" stroke="#374151" />
+    <text x="484" y="216" fill="#f8fafc" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Mistake Pattern Analysis</text>
+    <path d="M500 366 L610 320 L708 332 L812 286 L912 304 L1040 250" fill="none" stroke="#f97316" stroke-width="7" stroke-linecap="round" />
+    <path d="M500 340 L610 334 L708 298 L812 304 L912 276 L1040 262" fill="none" stroke="#22c55e" stroke-width="5" stroke-dasharray="9 8" />
+  </g>
+
+  <g>
+    <rect x="118" y="446" width="974" height="240" rx="16" fill="#111827" stroke="#374151" />
+    <text x="148" y="486" fill="#f8fafc" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Optimization Cycle</text>
+
+    <g fill="#1f2937" stroke="#475569">
+      <rect x="160" y="528" width="180" height="96" rx="12" />
+      <rect x="398" y="528" width="180" height="96" rx="12" />
+      <rect x="636" y="528" width="180" height="96" rx="12" />
+      <rect x="874" y="528" width="180" height="96" rx="12" />
+    </g>
+
+    <g fill="#cbd5e1" font-size="17" font-family="Inter, Segoe UI, sans-serif" font-weight="600">
+      <text x="204" y="581">Review</text>
+      <text x="430" y="581">Diagnose</text>
+      <text x="683" y="581">Refine Rule</text>
+      <text x="921" y="581">Re-Test</text>
+    </g>
+
+    <path d="M342 576h42M580 576h42M818 576h42" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Execution Discipline Illustration</title>
+  <desc id="desc">Order execution workflow with checklist milestones and controlled routing.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1324" />
+      <stop offset="1" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <rect x="70" y="60" width="1060" height="680" rx="24" fill="#101827" stroke="#334155" />
+
+  <text x="118" y="124" fill="#e2e8f0" font-size="28" font-family="Inter, Segoe UI, sans-serif" font-weight="700">EXECUTION PLAYBOOK</text>
+
+  <g>
+    <rect x="120" y="176" width="960" height="112" rx="14" fill="#111827" stroke="#374151" />
+    <text x="150" y="218" fill="#f8fafc" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Pre-Trade Checklist</text>
+    <g fill="#22c55e">
+      <circle cx="172" cy="252" r="8" /><circle cx="334" cy="252" r="8" /><circle cx="506" cy="252" r="8" />
+      <circle cx="676" cy="252" r="8" /><circle cx="842" cy="252" r="8" /><circle cx="1010" cy="252" r="8" />
+    </g>
+    <g fill="#93c5fd" font-size="16" font-family="Inter, Segoe UI, sans-serif">
+      <text x="188" y="258">Regime</text><text x="350" y="258">Liquidity</text><text x="522" y="258">Catalyst</text>
+      <text x="692" y="258">Risk</text><text x="858" y="258">Size</text><text x="1026" y="258">Trigger</text>
+    </g>
+  </g>
+
+  <g>
+    <rect x="120" y="330" width="456" height="352" rx="16" fill="#0f172a" stroke="#374151" />
+    <text x="152" y="372" fill="#f8fafc" font-size="22" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Order Routing</text>
+
+    <path d="M164 432h120v72h-120zM328 432h120v72h-120zM164 544h120v72h-120zM328 544h120v72h-120z"
+      fill="#1f2937" stroke="#475569" />
+    <text x="188" y="475" fill="#cbd5e1" font-size="17" font-family="Inter, Segoe UI, sans-serif">Setup</text>
+    <text x="354" y="475" fill="#cbd5e1" font-size="17" font-family="Inter, Segoe UI, sans-serif">Entry</text>
+    <text x="186" y="587" fill="#cbd5e1" font-size="17" font-family="Inter, Segoe UI, sans-serif">Manage</text>
+    <text x="355" y="587" fill="#cbd5e1" font-size="17" font-family="Inter, Segoe UI, sans-serif">Exit</text>
+
+    <path d="M286 468h34M388 506v36M286 580h34M224 506v36" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g>
+    <rect x="606" y="330" width="474" height="352" rx="16" fill="#0f172a" stroke="#374151" />
+    <text x="638" y="372" fill="#f8fafc" font-size="22" font-family="Inter, Segoe UI, sans-serif" font-weight="700">Execution Discipline Score</text>
+
+    <rect x="638" y="418" width="410" height="36" rx="10" fill="#111827" stroke="#334155" />
+    <rect x="638" y="418" width="356" height="36" rx="10" fill="#22c55e" />
+    <text x="650" y="442" fill="#0b1220" font-size="17" font-family="Inter, Segoe UI, sans-serif" font-weight="700">87% Plan Adherence</text>
+
+    <rect x="638" y="478" width="410" height="36" rx="10" fill="#111827" stroke="#334155" />
+    <rect x="638" y="478" width="324" height="36" rx="10" fill="#38bdf8" />
+    <text x="650" y="502" fill="#0b1220" font-size="17" font-family="Inter, Segoe UI, sans-serif" font-weight="700">79% Timing Precision</text>
+
+    <rect x="638" y="538" width="410" height="36" rx="10" fill="#111827" stroke="#334155" />
+    <rect x="638" y="538" width="372" height="36" rx="10" fill="#f59e0b" />
+    <text x="650" y="562" fill="#0b1220" font-size="17" font-family="Inter, Segoe UI, sans-serif" font-weight="700">91% Risk Compliance</text>
+  </g>
+</svg>
